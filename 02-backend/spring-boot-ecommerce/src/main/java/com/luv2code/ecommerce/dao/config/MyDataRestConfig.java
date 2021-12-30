@@ -1,6 +1,7 @@
 package com.luv2code.ecommerce.dao.config;
 
 
+import com.luv2code.ecommerce.entity.Order;
 import com.luv2code.ecommerce.entity.Product;
 import com.luv2code.ecommerce.entity.ProductCategory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,13 +41,20 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
         //disable HTTP methods for Product: PUT, POST, DELETE
         config.getExposureConfiguration()
                 .forDomainType(Product.class)
-                .withItemExposure(((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions)))
-                .withCollectionExposure((((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions))));
+                .withItemExposure(((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions)))
+                .withCollectionExposure((((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions))));
         //disable HTTP methods for Product Category: PUT, POST, DELETE
         config.getExposureConfiguration()
                 .forDomainType(ProductCategory.class)
-                .withItemExposure(((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions)))
-                .withCollectionExposure((((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions))));
+                .withItemExposure(((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions)))
+                .withCollectionExposure((((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions))));
+        //Disable HTTP methods for Find User Order History
+        config.getExposureConfiguration()
+                .forDomainType(Order.class)
+                .withItemExposure(((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions)))
+                .withCollectionExposure((((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions))));
+
+
         //Call internal helper method
         exposeIds(config);
 
