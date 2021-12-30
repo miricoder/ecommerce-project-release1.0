@@ -10,6 +10,7 @@ import { OktaAuthService } from '@okta/okta-angular';
 export class LoginStatusComponent implements OnInit {
   isAuthenticated: boolean = false;
   userFullName: string; 
+  storage: Storage = sessionStorage;
   constructor(private oktaAuthService: OktaAuthService) { }
 
   ngOnInit(): void {
@@ -29,6 +30,15 @@ export class LoginStatusComponent implements OnInit {
       this.oktaAuthService.getUser().then(
         (res) => {
           this.userFullName = res.name!;
+          /*** 
+          Belo userEmail and theEmail pairs are used to keep track of user emails for viewing their order history 
+          */
+          //retrieve the user's email from authenticated response 
+          const theEmail = res.email;
+
+          // now store the email in browser storage
+          // ---- KEY: userEmail, VALUE: theEmail
+          this.storage.setItem('userEmail', JSON.stringify(theEmail));
         }
       );
 

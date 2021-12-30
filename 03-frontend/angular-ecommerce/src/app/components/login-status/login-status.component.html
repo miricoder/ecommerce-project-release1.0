@@ -9,4 +9,6 @@
     
     <!-- Only show memeber button to users when if they are logged in-->
     <button *ngIf="isAuthenticated" routerLink="/members" class="security-btn">Member</button>
+    <!--Button for Your Order History -->
+    <button *ngIf="isAuthenticated" routerLink="/order-history" class="security-btn">Orders</button>
 </div>

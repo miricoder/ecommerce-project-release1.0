@@ -1,9 +1,7 @@
 package com.luv2code.ecommerce.dao.config;
 
 
-import com.luv2code.ecommerce.entity.Order;
-import com.luv2code.ecommerce.entity.Product;
-import com.luv2code.ecommerce.entity.ProductCategory;
+import com.luv2code.ecommerce.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -38,22 +36,12 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
 
         HttpMethod[] theUnsupportedActions = {HttpMethod.PUT, HttpMethod.POST, HttpMethod.DELETE, HttpMethod.PATCH};
 
-        //disable HTTP methods for Product: PUT, POST, DELETE
-        config.getExposureConfiguration()
-                .forDomainType(Product.class)
-                .withItemExposure(((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions)))
-                .withCollectionExposure((((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions))));
-        //disable HTTP methods for Product Category: PUT, POST, DELETE
-        config.getExposureConfiguration()
-                .forDomainType(ProductCategory.class)
-                .withItemExposure(((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions)))
-                .withCollectionExposure((((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions))));
-        //Disable HTTP methods for Find User Order History
-        config.getExposureConfiguration()
-                .forDomainType(Order.class)
-                .withItemExposure(((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions)))
-                .withCollectionExposure((((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions))));
-
+        // disable HTTP methods for ProductCategory: PUT, POST, DELETE and PATCH
+        disableHttpMethods(Product.class, config, theUnsupportedActions);
+        disableHttpMethods(ProductCategory.class, config, theUnsupportedActions);
+        disableHttpMethods(Country.class, config, theUnsupportedActions);
+        disableHttpMethods(State.class, config, theUnsupportedActions);
+        disableHttpMethods(Order.class, config, theUnsupportedActions); //-Order is made read only
 
         //Call internal helper method
         exposeIds(config);
@@ -63,6 +51,12 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
          * Remove the cross origin @CrossOrigin anotoation from StateRepository.java class
          */
         cors.addMapping(config.getBasePath()+"/**").allowedOrigins(theAllowedOrigins);
+    }
+    private void disableHttpMethods(Class theClass, RepositoryRestConfiguration config, HttpMethod[] theUnsupportedActions) {
+        config.getExposureConfiguration()
+                .forDomainType(theClass)
+                .withItemExposure((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions))
+                .withCollectionExposure((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions));
     }
     private void exposeIds(RepositoryRestConfiguration config){
         //expose entity ids
