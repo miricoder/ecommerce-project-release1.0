@@ -31,6 +31,10 @@ export class CheckoutComponent implements OnInit {
   shippingAddressStates: State[] = [];
   billingAddressStates: State[] = [];
 
+  //Used for prepopulating the email field when checking out 
+  storage: Storage = sessionStorage;
+
+
   //1: Inject FormBuilder group using the constructor 
   constructor(private formBuilder: FormBuilder,
     private luv2ShopFormService: Luv2ShopFormService,
@@ -40,6 +44,10 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.reviewCartDetails();
+      //Used for prepopulating the email field when checking out 
+      /*read the user's email address from browser storage*/
+      const theEmail = JSON.parse(this.storage.getItem('userEmail')!)
+
     //2: Build the Form 
     // -> customer - key for the group (FormGroup name)
     // -> firstName,lastName,email - FormControl names, these are the form fields 
@@ -56,7 +64,7 @@ export class CheckoutComponent implements OnInit {
           [Validators.required,
           Validators.minLength(2),
           Luv2ShopValidators.notOnlyWhitespace]),
-        email: new FormControl('',
+        email: new FormControl(theEmail,
           //Using Validators.pattern instead of Validators.email in order to verify actual email domains 
           [Validators.required,
           Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')])

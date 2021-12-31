@@ -12,7 +12,9 @@
     -webkit-border-radius:3px;
     -moz-border-radius:3px;
     border-radius:43px;
-    background:#205b8d
+    background:#205b8d;
+    /*To fix size miz up of buttons when resizing screen to different devices*/
+    margin-right: 15px;
 }
 /* 
     Copy from styles.css -> .form-header
