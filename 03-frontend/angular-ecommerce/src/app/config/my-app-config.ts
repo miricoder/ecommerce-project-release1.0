@@ -4,7 +4,7 @@ export default {
         issuer: 'https://dev-79339789.okta.com/oauth2/default',
         // issuer: 'https://dev-67723749.okta.com/oauth2/default',
         // issuer: 'https://dev-20662866.okta.com/oauth2/default',
-        redirectUri: 'http://localhost:4200/login/callback',
+        redirectUri: 'https://localhost:4200/login/callback',
         scopes: ['openid','profile','email']
     }   
 }

@@ -22,7 +22,7 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
     /**
      * For reading data from application.properties file
      */
-    @Value("${allowed.Origins}")
+    @Value("${allowed.origins}")
     private String[] theAllowedOrigins;
 
     private EntityManager entityManager;
