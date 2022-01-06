@@ -1,0 +1,1 @@
+{"ast":null,"code":"export const environment = {\n  production: false,\n  //add your custom environment configs \n  luv2shopApiUrl: \"https://localhost:9898/api\"\n};","map":null,"metadata":{},"sourceType":"module"}

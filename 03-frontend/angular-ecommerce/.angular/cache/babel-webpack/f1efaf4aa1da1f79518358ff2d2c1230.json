@@ -1,0 +1,1 @@
+{"ast":null,"code":"var call = Function.prototype.call;\nmodule.exports = call.bind ? call.bind(call) : function () {\n  return call.apply(call, arguments);\n};","map":null,"metadata":{},"sourceType":"script"}
