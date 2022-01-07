@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { ProductCategory } from '../common/product-category';
 import { environment } from 'src/environments/environment';
 
+
 @Injectable({
   providedIn: 'root'
 })
