@@ -17,6 +17,19 @@
 		<java.version>1.8</java.version>
 	</properties>
 	<dependencies>
+		<!--
+          For Maven, add the following dependency to your POM and replace {VERSION} with the
+          version number you want to use from
+          - https://mvnrepository.com/artifact/com.stripe/stripe-java or
+          - https://github.com/stripe/stripe-java/releases/latest
+        -->
+		<!-- https://mvnrepository.com/artifact/com.stripe/stripe-java -->
+		<dependency>
+			<groupId>com.stripe</groupId>
+			<artifactId>stripe-java</artifactId>
+			<version>20.94.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>

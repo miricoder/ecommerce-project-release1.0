@@ -1,15 +1,18 @@
+import { typeWithParameters } from '@angular/compiler/src/render3/util';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Country } from 'src/app/common/country';
 import { Order } from 'src/app/common/order';
 import { OrderItem } from 'src/app/common/order-item';
+import { PaymentInfo } from 'src/app/common/payment-info';
 import { Purchase } from 'src/app/common/purchase';
 import { State } from 'src/app/common/state';
 import { CartService } from 'src/app/services/cart.service';
 import { CheckoutService } from 'src/app/services/checkout.service';
 import { Luv2ShopFormService } from 'src/app/services/luv2-shop-form.service';
 import { Luv2ShopValidators } from 'src/app/validators/luv2-shop-validators';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-checkout',
@@ -34,6 +37,12 @@ export class CheckoutComponent implements OnInit {
   //Used for prepopulating the email field when checking out 
   storage: Storage = sessionStorage;
 
+  //[STRIPE]Initializinig STRIPE API and PaymentInfo DTO 
+  stripe = Stripe(environment.stripePublishableKey);
+  paymentInfo: PaymentInfo  = new PaymentInfo();
+  //[STRIPE]Set up a reference for cardEelement and displayError
+  cardEelement: any;
+  displayError: any="";
 
   //1: Inject FormBuilder group using the constructor 
   constructor(private formBuilder: FormBuilder,
@@ -43,6 +52,9 @@ export class CheckoutComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
+    //[STRIPE] - Set up Stripe payment form
+    this.setupStripePaymentForm();
+
     this.reviewCartDetails();
       //Used for prepopulating the email field when checking out 
       /*read the user's email address from browser storage*/
@@ -102,7 +114,8 @@ export class CheckoutComponent implements OnInit {
           Luv2ShopValidators.notOnlyWhitespace])
       }),
       creditCard: this.formBuilder.group({
-        cardType: new FormControl('',
+       //Replaced by Stripe code
+        /* cardType: new FormControl('',
           [Validators.required,
           Validators.minLength(2),
           Luv2ShopValidators.notOnlyWhitespace]),
@@ -113,12 +126,13 @@ export class CheckoutComponent implements OnInit {
         cardNumber: new FormControl('', [Validators.required, Validators.pattern('[0-9]{16}')]),
         securityCode: new FormControl('', [Validators.required, Validators.pattern('[0-9]{3}')]),
         expirationMonth: [''],
-        expirationYear: ['']
+        expirationYear: ['']*/
+
       })
     });
     // populate credit card months
-
-    const startMonth: number = new Date().getMonth() + 1;
+    //Replaced by Stripe code
+    /*const startMonth: number = new Date().getMonth() + 1;
     console.log("startMonth: " + startMonth);
 
     this.luv2ShopFormService.getCreditCardMonths(startMonth).subscribe(
@@ -127,7 +141,7 @@ export class CheckoutComponent implements OnInit {
         this.creditCardMonths = data;
       }
     );
-
+  
     // populate credit card years
 
     this.luv2ShopFormService.getCreditCardYears().subscribe(
@@ -136,6 +150,8 @@ export class CheckoutComponent implements OnInit {
         this.creditCardYears = data;
       }
     );
+*/
+
 
     // populate countries
 
@@ -145,6 +161,32 @@ export class CheckoutComponent implements OnInit {
         this.countries = data;
       }
     );
+  }
+  setupStripePaymentForm() {
+    //Get a handle to stripe elements
+    var element = this.stripe.elements();
+    
+    //Create a card Element ... customize it to hide zip-code field
+    this.cardEelement = elements.create('card', {hidePosalCode: true});
+
+    //Add an instance of card UI component into the 'card-element' div
+    this.cardEelement.mount('#card-element');
+
+    //Add event binding for the 'change' event on the card element
+    this.cardEelement.on('change', (event: any) => {
+      // get a handle to card-errors element 
+      this.displayError = document.getElementById('card-errors');
+
+      if(event.complete){
+        this.displayError.textContent = "";
+      }else if(event.error){
+        //Show validation error to customer
+        this.displayError.textContent = event.error.message;
+        
+      }
+    });
+
+    
   }
   //Pub/Sub latest Price, Shipping Details and Quantity in Review Cart Details 
   reviewCartDetails() {

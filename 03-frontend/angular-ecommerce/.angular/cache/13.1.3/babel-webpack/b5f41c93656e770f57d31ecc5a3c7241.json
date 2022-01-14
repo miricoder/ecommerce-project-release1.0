@@ -1,0 +1,1 @@
+{"ast":null,"code":"export const environment = {\n  production: false,\n  //add your custom environment configs \n  luv2shopApiUrl: \"https://localhost:9898/api\",\n  stripePublishableKey: \"pk_test_51KG3mFC2Ff9XvVNW6t4BiDyNUnVpOkQLxnJ7ZdJjqb1FMVTSfkIhNkNmWU9KvJYJy6aSPvPPfnK1wWGFvXyFk35700GnfpEbLQ\"\n};","map":null,"metadata":{},"sourceType":"module"}
